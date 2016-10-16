@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+
+  <head>
+      <meta charset="utf-8">
+      <title>Game - Justice Ampofo</title>
+      <link rel="stylesheet" href="css/style.css">
+  </head>
+
+  <body>
+
+    <canvas id="myCanvas"></canvas>
+
+    <script>
+      // Get reference to canvas
+      var canvas = document.getElementById('myCanvas');
+      var context = canvas.getContext('2d');
+
+      // Size canvas to fill screen
+			canvas.width = window.innerWidth;
+			canvas.height = window.innerHeight;
+
+      //player
+      var player = {
+        // Keep track of player's position
+        posX: canvas.width / 2,
+        posY: canvas.height / 2,
+        rad:50, //player's radius
+        faceCol: 'blue'
+      };
+
+      //player
+      var player2 = {
+        // Keep track of player's position
+        posX: canvas.width / 3,
+        posY: canvas.height / 3,
+      };
+
+      //goal
+      var goal = {
+        posX: Math.round(Math.random()*canvas.width),
+        posY:  Math.round(Math.random()*canvas.height),
+        rad:70,
+        lineThick:5
+      };
+
+
+
+      function setRandom()
+      {
+         goal.posX = Math.round(Math.random()*canvas.width);
+         goal.posY = Math.round(Math.random()*canvas.height);
+      }
+
+      var score = 0;
+
+			// Listen for device orientation event
+			window.ondeviceorientation = function(eventData)
+			{
+				// Move the player
+				player.posX = player.posX + event.gamma;
+				player.posY = player.posY + event.beta;
+
+        //the Distance between player and goal
+        var dx =  (goal.posX) - (player.posX);
+        var dy =  (goal.posY) - (player.posY);
+        var distance = Math.sqrt((dx * dx) + (dy * dy));
+
+				// Keep Player in bounds
+				if (player.posX < 0) player.posX = 0;
+				if (player.posX > canvas.width) player.posX = canvas.width;
+				if (player.posY < 0) player.posY = 0;
+				if (player.posY > canvas.height) player.posY = canvas.height;
+
+        //collision 
+        if (distance < player.rad + goal.rad)
+        {
+          player.faceCol = 'green';
+          score ++;
+          setRandom();
+        }
+        else
+        {
+        }
+
+				// Clear scene
+				context.clearRect(0, 0, canvas.width, canvas.height);
+
+        //Draw goal
+        context.beginPath();
+        context.arc(goal.posX, goal.posY, goal.rad, 0, Math.PI*2);
+        context.fillStyle = 'yellow';
+        context.lineWidth = goal.lineThick;
+        context.fill();
+
+				// Draw player
+				context.beginPath();
+				context.arc(player.posX, player.posY, player.rad, 0, Math.PI * 2);
+				context.fillStyle = player.faceCol;
+				context.fill();
+
+        //Draw player's left eye
+        context.beginPath();
+				context.arc(player.posX-15, player.posY-15, 10, 0, Math.PI * 2);
+				context.fillStyle = 'white';
+				context.fill();
+
+        //Draw player's right eye
+        context.beginPath();
+				context.arc(player.posX+15, player.posY-15, 10, 0, Math.PI * 2);
+				context.fillStyle = 'white';
+				context.fill();
+
+        //Draw player's mouth
+        context.beginPath();
+				context.arc(player.posX, player.posY+10, 20, 0, Math.PI);
+				context.fillStyle = 'white';
+				context.fill();
+
+			}
+
+    </script>
+
+  </body>
+</html>
