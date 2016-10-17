@@ -29,13 +29,6 @@
         faceCol: 'blue'
       };
 
-      //player
-      var player2 = {
-        // Keep track of player's position
-        posX: canvas.width / 3,
-        posY: canvas.height / 3,
-      };
-
       //goal
       var goal = {
         posX: Math.round(Math.random()*canvas.width),
@@ -53,6 +46,27 @@
       }
 
       var score = 0;
+      var counter = 10;
+      var timer;
+
+      timer = setInterval(function() {
+
+          if(counter  < 0)
+          {window.ondeviceorientation = null;
+            clearInterval(timer);
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            alert('hi');
+            /*context.beginPath();
+            context.fillRect(0,0, canvas.width, canvas.height);
+            context.fillStyle = 'black';
+            context.fill();*/
+          }
+          else
+          {
+            counter--;
+          }
+      }, 1000);
+
 
 			// Listen for device orientation event
 			window.ondeviceorientation = function(eventData)
@@ -72,7 +86,7 @@
 				if (player.posY < 0) player.posY = 0;
 				if (player.posY > canvas.height) player.posY = canvas.height;
 
-        //collision 
+        //collision
         if (distance < player.rad + goal.rad)
         {
           player.faceCol = 'green';
@@ -82,6 +96,8 @@
         else
         {
         }
+
+
 
 				// Clear scene
 				context.clearRect(0, 0, canvas.width, canvas.height);
@@ -117,6 +133,15 @@
 				context.fillStyle = 'white';
 				context.fill();
 
+        //font
+        context.font = '20px Verdana';
+        // Horizontal text alignment
+        context.textAlign = 'center';
+
+        // Vertical text alignment, default is "alphabetic"
+        context.textBaseline = 'middle';
+        context.fillText('Score: ' + score, 50, 25);
+        context.fillText('Time: ' + counter, 150, 25);
 			}
 
     </script>
