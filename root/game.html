@@ -45,6 +45,33 @@
          goal.posY = Math.round(Math.random()*canvas.height);
       }
 
+      function drawStationPlayer(x,y)
+      {
+        context.beginPath();
+        context.fillStyle = 'blue';
+        context.beginPath();
+        context.arc(x, y, 80, 0, Math.PI*2);
+        context.fill();
+
+        //Draw player's left eye
+        context.beginPath();
+        context.arc(x-25, y-30, 20, 0, Math.PI * 2);
+        context.fillStyle = 'white';
+        context.fill();
+
+        //Draw player's right eye
+        context.beginPath();
+        context.arc(x+25, y-30, 20, 0, Math.PI * 2);
+        context.fillStyle = 'white';
+        context.fill();
+
+        //Draw player's mouth
+        context.beginPath();
+        context.arc(x, y+15, 40, 0, Math.PI);
+        context.fillStyle = 'white';
+        context.fill();
+      }
+
       var score = 0;
       var counter = 10;
       var timer;
@@ -52,14 +79,8 @@
       timer = setInterval(function() {
 
           if(counter  < 0)
-          {window.ondeviceorientation = null;
-            clearInterval(timer);
-            context.clearRect(0, 0, canvas.width, canvas.height);
-            alert('hi');
-            /*context.beginPath();
-            context.fillRect(0,0, canvas.width, canvas.height);
-            context.fillStyle = 'black';
-            context.fill();*/
+          {
+            gameOver();
           }
           else
           {
@@ -69,81 +90,102 @@
 
 
 			// Listen for device orientation event
-			window.ondeviceorientation = function(eventData)
-			{
-				// Move the player
-				player.posX = player.posX + event.gamma;
-				player.posY = player.posY + event.beta;
+      function startGame()
+      {
+  			window.ondeviceorientation = function(eventData)
+  			{
+  				// Move the player
+  				player.posX = player.posX + event.gamma;
+  				player.posY = player.posY + event.beta;
 
-        //the Distance between player and goal
-        var dx =  (goal.posX) - (player.posX);
-        var dy =  (goal.posY) - (player.posY);
-        var distance = Math.sqrt((dx * dx) + (dy * dy));
+          //the Distance between player and goal
+          var dx =  (goal.posX) - (player.posX);
+          var dy =  (goal.posY) - (player.posY);
+          var distance = Math.sqrt((dx * dx) + (dy * dy));
 
-				// Keep Player in bounds
-				if (player.posX < 0) player.posX = 0;
-				if (player.posX > canvas.width) player.posX = canvas.width;
-				if (player.posY < 0) player.posY = 0;
-				if (player.posY > canvas.height) player.posY = canvas.height;
+  				// Keep Player in bounds
+  				if (player.posX < 0) player.posX = 0;
+  				if (player.posX > canvas.width) player.posX = canvas.width;
+  				if (player.posY < 0) player.posY = 0;
+  				if (player.posY > canvas.height) player.posY = canvas.height;
 
-        //collision
-        if (distance < player.rad + goal.rad)
-        {
-          player.faceCol = 'green';
-          score ++;
-          setRandom();
-        }
-        else
-        {
-        }
+          //collision
+          if (distance < player.rad + goal.rad)
+          {
+            player.faceCol = 'green';
+            score ++;
+            setRandom();
+          }
+          else
+          {
+          }
 
 
 
-				// Clear scene
-				context.clearRect(0, 0, canvas.width, canvas.height);
+  				// Clear scene
+  				context.clearRect(0, 0, canvas.width, canvas.height);
 
-        //Draw goal
+          //Draw goal
+          context.beginPath();
+          context.arc(goal.posX, goal.posY, goal.rad, 0, Math.PI*2);
+          context.fillStyle = 'yellow';
+          context.lineWidth = goal.lineThick;
+          context.fill();
+
+  				// Draw player
+  				context.beginPath();
+  				context.arc(player.posX, player.posY, player.rad, 0, Math.PI * 2);
+  				context.fillStyle = player.faceCol;
+  				context.fill();
+
+          //Draw player's left eye
+          context.beginPath();
+  				context.arc(player.posX-15, player.posY-15, 10, 0, Math.PI * 2);
+  				context.fillStyle = 'white';
+  				context.fill();
+
+          //Draw player's right eye
+          context.beginPath();
+  				context.arc(player.posX+15, player.posY-15, 10, 0, Math.PI * 2);
+  				context.fillStyle = 'white';
+  				context.fill();
+
+          //Draw player's mouth
+          context.beginPath();
+  				context.arc(player.posX, player.posY+10, 20, 0, Math.PI);
+  				context.fillStyle = 'white';
+  				context.fill();
+
+          //font
+          context.font = '20px Verdana';
+          // Horizontal text alignment
+          context.textAlign = 'center';
+
+          // Vertical text alignment, default is "alphabetic"
+          context.textBaseline = 'middle';
+          context.fillStyle = 'white';
+          context.fillText('Score: ' + score, 50, 25);
+          context.fillText('Time: ' + counter, 150, 25);
+  			}
+    } //startGame ends
+
+    function gameOver()
+    {
+        window.ondeviceorientation = null;
+        clearInterval(timer);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        alert('hi');
         context.beginPath();
-        context.arc(goal.posX, goal.posY, goal.rad, 0, Math.PI*2);
-        context.fillStyle = 'yellow';
-        context.lineWidth = goal.lineThick;
+        context.font = '40px Verdana';
+        context.fillStyle = 'white';
+        context.fillText('Score: ' + score, canvas.width/2 , canvas.height/2);
         context.fill();
 
-				// Draw player
-				context.beginPath();
-				context.arc(player.posX, player.posY, player.rad, 0, Math.PI * 2);
-				context.fillStyle = player.faceCol;
-				context.fill();
+        drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100) );
 
-        //Draw player's left eye
-        context.beginPath();
-				context.arc(player.posX-15, player.posY-15, 10, 0, Math.PI * 2);
-				context.fillStyle = 'white';
-				context.fill();
+    }
 
-        //Draw player's right eye
-        context.beginPath();
-				context.arc(player.posX+15, player.posY-15, 10, 0, Math.PI * 2);
-				context.fillStyle = 'white';
-				context.fill();
-
-        //Draw player's mouth
-        context.beginPath();
-				context.arc(player.posX, player.posY+10, 20, 0, Math.PI);
-				context.fillStyle = 'white';
-				context.fill();
-
-        //font
-        context.font = '20px Verdana';
-        // Horizontal text alignment
-        context.textAlign = 'center';
-
-        // Vertical text alignment, default is "alphabetic"
-        context.textBaseline = 'middle';
-        context.fillText('Score: ' + score, 50, 25);
-        context.fillText('Time: ' + counter, 150, 25);
-			}
-
+    startGame();
     </script>
 
   </body>
