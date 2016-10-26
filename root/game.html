@@ -10,8 +10,17 @@
   <body>
 
     <canvas id="myCanvas"></canvas>
-
+    <div id="myDiv">
+      <button id="myRestartButton">Restart</button>
+    </div>
     <script>
+
+      //sajlfsjakfl
+      var div = document.getElementById('myDiv');
+
+      //Get reference to restart button
+      var restart = document.getElementById('myRestartButton');
+
       // Get reference to canvas
       var canvas = document.getElementById('myCanvas');
       var context = canvas.getContext('2d');
@@ -19,6 +28,10 @@
       // Size canvas to fill screen
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
+
+      var r = (canvas.width) + "px";
+
+      var h = (canvas.height/2 + 100) + "px";
 
       //player
       var player = {
@@ -78,7 +91,7 @@
 
       timer = setInterval(function() {
 
-          if(counter  < 0)
+          if(counter  == 0)
           {
             gameOver();
           }
@@ -89,9 +102,10 @@
       }, 1000);
 
 
-			// Listen for device orientation event
+
       function startGame()
       {
+        	// Listen for device orientation event
   			window.ondeviceorientation = function(eventData)
   			{
   				// Move the player
@@ -112,7 +126,7 @@
           //collision
           if (distance < player.rad + goal.rad)
           {
-            player.faceCol = 'green';
+            //player.faceCol = 'green';
             score ++;
             setRandom();
           }
@@ -157,15 +171,15 @@
   				context.fill();
 
           //font
-          context.font = '20px Verdana';
+          context.font = '40px Verdana';
           // Horizontal text alignment
           context.textAlign = 'center';
 
           // Vertical text alignment, default is "alphabetic"
           context.textBaseline = 'middle';
           context.fillStyle = 'white';
-          context.fillText('Score: ' + score, 50, 25);
-          context.fillText('Time: ' + counter, 150, 25);
+          context.fillText('Score: ' + score, 100, 25);
+          context.fillText('Time: ' + counter, 300, 25);
   			}
     } //startGame ends
 
@@ -181,7 +195,10 @@
         context.fillText('Score: ' + score, canvas.width/2 , canvas.height/2);
         context.fill();
 
-        drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100) );
+        drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100));
+        div.style.display="block";
+        div.style.top = h;
+        //restart.style.right = "0%";
 
     }
 
