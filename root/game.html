@@ -86,8 +86,25 @@
       }
 
       var score = 0;
-      var counter = 10;
+      var counter;
       var timer;
+      var highScore;
+
+      if(typeof(Storage)!="undefined")
+      {
+        if((localStorage.getItem("currentHighScore")) === null)
+        {
+          highScore = 0;
+        }
+        else
+        {
+          highScore = localStorage.getItem("currentHighScore");
+        }
+      }
+      else
+      {
+        alert("Your browswer won't save the High Score :( ");
+      }
 
       timer = setInterval(function() {
 
@@ -105,7 +122,12 @@
 
       function startGame()
       {
-        	// Listen for device orientation event
+        counter = 10;
+        score = 0;
+        player.faceCol = "blue";
+
+
+        // Listen for device orientation event
   			window.ondeviceorientation = function(eventData)
   			{
   				// Move the player
@@ -126,9 +148,13 @@
           //collision
           if (distance < player.rad + goal.rad)
           {
-            //player.faceCol = 'green';
             score ++;
             setRandom();
+            if(score > highScore)
+            {
+              player.faceCol = 'green';
+              highScore ++;
+            }
           }
           else
           {
@@ -180,8 +206,29 @@
           context.fillStyle = 'white';
           context.fillText('Score: ' + score, 100, 25);
           context.fillText('Time: ' + counter, 300, 25);
+          context.fillText('High Score: ' + highScore, 650, 25);
   			}
     } //startGame ends
+
+    function MainMenu()
+    {
+        window.ondeviceorientation = null;
+        clearInterval(timer);
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        alert('This is the Main Menu');
+        context.beginPath();
+        context.textBaseline = 'middle';
+        context.textAlign = 'center';
+        context.font = '40px Verdana';
+        context.fillStyle = 'white';
+        context.fillText('Rotate your device to collect the coins!!', canvas.width/2 , canvas.height/2);
+        context.fillText('High Score: ' + highScore, canvas.width/2 , canvas.height/2 + 50);
+        context.fill();
+
+        drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100));
+        div.style.display="block";
+        div.style.top = h;
+    }//MainMenu function ends here
 
     function gameOver()
     {
@@ -190,19 +237,49 @@
         context.clearRect(0, 0, canvas.width, canvas.height);
         alert('hi');
         context.beginPath();
+        context.textBaseline = 'middle';
+        context.textAlign = 'center';
         context.font = '40px Verdana';
         context.fillStyle = 'white';
         context.fillText('Score: ' + score, canvas.width/2 , canvas.height/2);
+        context.fillText('High Score: ' + highScore, canvas.width/2 , canvas.height/2 + 50);
         context.fill();
 
         drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100));
         div.style.display="block";
         div.style.top = h;
-        //restart.style.right = "0%";
 
+        if(player.faceCol == "green")
+        {
+
+          if(typeof(Storage)!="undefined")
+          {
+            alert("New High Score!");
+            localStorage.setItem("currentHighScore",highScore);
+          }
+          context.fillText('New High Score!', canvas.width/2 , canvas.height/2 - 250);
+        }
+    }//GameOver function ends here
+
+    restart.onclick = function()
+    {
+      div.style.display="none";
+      startGame();
+      timer = setInterval(function() {
+
+          if(counter  == 0)
+          {
+            gameOver();
+          }
+          else
+          {
+            counter--;
+          }
+      }, 1000);
     }
 
-    startGame();
+    MainMenu();
+
     </script>
 
   </body>
