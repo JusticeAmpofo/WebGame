@@ -7,19 +7,29 @@
       <link rel="stylesheet" href="css/style.css">
   </head>
 
-  <body>
+  <body id="myBody">
 
     <canvas id="myCanvas"></canvas>
+
     <div id="myDiv">
       <button id="myRestartButton">Restart</button>
     </div>
+
+    <div id="mySecondDiv">
+      <button id="myPlayButton">Play Game</button>
+    </div>
     <script>
 
-      //sajlfsjakfl
-      var div = document.getElementById('myDiv');
+      //Get reference to the body element
+      var body = document.getElementById('myBody');
 
-      //Get reference to restart button
+      //Get reference to the div elements
+      var div = document.getElementById('myDiv');
+      var div2 = document.getElementById('mySecondDiv');
+
+      //Get reference to restart and play buttons
       var restart = document.getElementById('myRestartButton');
+      var engage  = document.getElementById('myPlayButton');
 
       // Get reference to canvas
       var canvas = document.getElementById('myCanvas');
@@ -29,8 +39,7 @@
 			canvas.width = window.innerWidth;
 			canvas.height = window.innerHeight;
 
-      var r = (canvas.width) + "px";
-
+      //This for the high score text in the game over function
       var h = (canvas.height/2 + 100) + "px";
 
       //player
@@ -50,7 +59,10 @@
         lineThick:5
       };
 
+      //Color array
+      var myColorArray = ['grey','red','orange','brown','purple'];
 
+      var colRand=0;
 
       function setRandom()
       {
@@ -58,6 +70,18 @@
          goal.posY = Math.round(Math.random()*canvas.height);
       }
 
+      //This function determines which color to pick next
+      function setColor()
+      {
+        colRand ++;
+        if(colRand == myColorArray.length)
+        {
+          colRand = 0;
+        }
+        body.style.background = myColorArray[colRand];
+      }
+
+      //draws the player but bigger in the game over function
       function drawStationPlayer(x,y)
       {
         context.beginPath();
@@ -85,11 +109,13 @@
         context.fill();
       }
 
+      //game variables
       var score = 0;
       var counter;
       var timer;
       var highScore;
 
+      // Local Storage for the high score.
       if(typeof(Storage)!="undefined")
       {
         if((localStorage.getItem("currentHighScore")) === null)
@@ -106,23 +132,10 @@
         alert("Your browswer won't save the High Score :( ");
       }
 
-      timer = setInterval(function() {
-
-          if(counter  == 0)
-          {
-            gameOver();
-          }
-          else
-          {
-            counter--;
-          }
-      }, 1000);
-
-
-
+      //The game begins
       function startGame()
       {
-        counter = 10;
+        counter = 60;
         score = 0;
         player.faceCol = "blue";
 
@@ -155,11 +168,12 @@
               player.faceCol = 'green';
               highScore ++;
             }
-          }
-          else
-          {
-          }
 
+            if(score%5 ==0)
+            {
+              setColor();
+            }
+          }
 
 
   				// Clear scene
@@ -203,19 +217,21 @@
 
           // Vertical text alignment, default is "alphabetic"
           context.textBaseline = 'middle';
+          //writing text
           context.fillStyle = 'white';
           context.fillText('Score: ' + score, 100, 25);
           context.fillText('Time: ' + counter, 300, 25);
           context.fillText('High Score: ' + highScore, 650, 25);
-  			}
+  			}//ondeviceorientation ends here
     } //startGame ends
 
+    //Starts when the app lanches
     function MainMenu()
     {
         window.ondeviceorientation = null;
         clearInterval(timer);
         context.clearRect(0, 0, canvas.width, canvas.height);
-        alert('This is the Main Menu');
+
         context.beginPath();
         context.textBaseline = 'middle';
         context.textAlign = 'center';
@@ -226,16 +242,17 @@
         context.fill();
 
         drawStationPlayer((canvas.width/2), ((canvas.height/2) - 100));
-        div.style.display="block";
-        div.style.top = h;
+        div2.style.display="block";
+        div2.style.top = h;
     }//MainMenu function ends here
 
+    //When time runs out
     function gameOver()
     {
         window.ondeviceorientation = null;
         clearInterval(timer);
         context.clearRect(0, 0, canvas.width, canvas.height);
-        alert('hi');
+        alert('Time is up!!!');
         context.beginPath();
         context.textBaseline = 'middle';
         context.textAlign = 'center';
@@ -251,7 +268,6 @@
 
         if(player.faceCol == "green")
         {
-
           if(typeof(Storage)!="undefined")
           {
             alert("New High Score!");
@@ -261,9 +277,28 @@
         }
     }//GameOver function ends here
 
+    //restart button pressed
     restart.onclick = function()
     {
       div.style.display="none";
+      startGame();
+      timer = setInterval(function() {
+
+          if(counter  == 0)
+          {
+            gameOver();
+          }
+          else
+          {
+            counter--;
+          }
+      }, 1000);
+    }
+
+    //start game button pressed
+    engage.onclick = function()
+    {
+      div2.style.display="none";
       startGame();
       timer = setInterval(function() {
 

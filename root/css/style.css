@@ -1,10 +1,10 @@
-body
+#myBody
 {
   background: grey;
   font-family: verdana,sans-serif;
   margin: 0;
   padding: 0;
-  /*border:1px solid red;*/
+  transition: background 1s;
 }
 
   #myCanvas
@@ -13,21 +13,22 @@ body
     height: 100%;
   }
 
-  #myDiv
+  #myDiv,#mySecondDiv
   {
     display: none;
     position: absolute;
-    /*border: 1px solid green;*/
     width:100%;
   }
 
-  #myRestartButton
-  {
-    border:1px solid blue;
-    border-radius: 5px;
-    font-size: 40px;
-    color:blue;
-    background:none;
-    margin:0 auto;
-    display:block;
-  }
+    #myRestartButton, #myPlayButton
+    {
+      border:1px solid blue;
+      border-radius: 5px;
+      font-size: 40px;
+      color:blue;
+      background:none;
+      margin:0 auto;
+      display:block;
+    }
+
+      
